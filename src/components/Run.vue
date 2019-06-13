@@ -90,13 +90,13 @@
                     videoPath: '',
                     videos: [{
                         title: 'video title',
-                        result: 'Uploaded'
+                        result: 'Failed'
                     },{
                         title: 'video title',
                         result: 'Uploaded'
                     },{
                         title: 'video title',
-                        result: 'Uploaded'
+                        result: 'Ready'
                     },{
                         title: 'video title',
                         result: 'Uploaded'
@@ -109,9 +109,9 @@
         },
         methods: {
             tableRowClassName({row, rowIndex}) {
-                if (rowIndex === 1) {
+                if (row.result === 'Failed') {
                     return 'warning-row';
-                } else if (rowIndex === 3) {
+                } else if (row.result === 'Uploaded') {
                     return 'success-row';
                 }
                 return '';
@@ -120,8 +120,14 @@
     }
 </script>
 
-<style scoped>
+<style>
     .form{
         margin-top: 10px;
+    }
+    .el-table .warning-row {
+        background: oldlace;
+    }
+    .el-table .success-row {
+        background: #f0f9eb;
     }
 </style>

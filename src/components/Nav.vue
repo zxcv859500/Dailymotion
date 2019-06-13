@@ -11,7 +11,7 @@
             <i class="el-icon-setting"></i>
             <span>Settings</span>
         </el-menu-item>
-        <el-menu-item index="Exit">
+        <el-menu-item @click="close">
             <i class="el-icon-close"></i>
             <span>Exit</span>
         </el-menu-item>
@@ -19,8 +19,19 @@
 </template>
 
 <script>
+    import { remote } from 'electron'
     export default {
-        name: "Nav"
+        name: "Nav",
+        data() {
+            return {
+                w: remote.getCurrentWindow(),
+            }
+        },
+        methods: {
+            close() {
+                this.w.close();
+            }
+        }
     }
 </script>
 
