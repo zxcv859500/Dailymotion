@@ -1,6 +1,6 @@
 <template>
     <el-menu
-            default-active="2"
+            default-active="3"
             class="el-menu-vertical"
             :router="true">
         <el-menu-item index="Run">

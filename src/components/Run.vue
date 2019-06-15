@@ -5,14 +5,32 @@
                 <el-form ref="form" :model="selected" label-width="120px">
                     <el-form-item label="도메인">
                         <el-select v-model="selected.domain" placeholder="Domain">
+                            <el-option
+                                v-for="item in domainList"
+                                :key="item"
+                                :label="item"
+                                :value="item">
+                            </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="키워드">
                         <el-select v-model="selected.keyword" placeholder="Keyword">
+                            <el-option
+                                v-for="item in keywordList"
+                                :key="item"
+                                :label="item"
+                                :value="item">
+                            </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="타이틀">
                         <el-select v-model="selected.title" placeholder="Title">
+                            <el-option
+                                v-for="item in titleList"
+                                :key="item"
+                                :label="item"
+                                :value="item">
+                            </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="스크립트">
@@ -26,23 +44,23 @@
                 </el-form>
             </el-col>
             <el-col :span="14">
-                <el-col :span="20">
-                    <el-form :model="video" label-width="120px">
+                <el-col :span="19">
+                    <el-form label-width="120px">
                         <el-form-item label="영상 경로">
                             <el-input
-                                    v-model="video.path"
+                                    v-model="videoPath"
                                     disabled></el-input>
                         </el-form-item>
                     </el-form>
                 </el-col>
-                <el-col :span="4">
-                    <el-button type="primary">Search</el-button>
+                <el-col :span="5">
+                    <el-button type="primary" @click="onClickSearch">Search</el-button>
                 </el-col>
                 <el-table
-                    :data="video.videos"
+                    :data="videoList"
                     size="middle"
                     border
-                    max-height="225px"
+                    max-height="230px"
                     :row-class-name="tableRowClassName">
                     <el-table-column
                         prop="title"
@@ -75,6 +93,9 @@
 </template>
 
 <script>
+    import { mapGetters } from 'vuex';
+    const dialog = require('electron').remote.dialog;
+
     export default {
         name: "Run",
         data() {
@@ -85,38 +106,33 @@
                     title: '',
                     script: '',
                     channel: ''
-                },
-                video: {
-                    videoPath: '',
-                    videos: [{
-                        title: 'video title',
-                        result: 'Failed'
-                    },{
-                        title: 'video title',
-                        result: 'Uploaded'
-                    },{
-                        title: 'video title',
-                        result: 'Ready'
-                    },{
-                        title: 'video title',
-                        result: 'Uploaded'
-                    },{
-                        title: 'video title',
-                        result: 'Uploaded'
-                    },]
                 }
             }
         },
         methods: {
-            tableRowClassName({row, rowIndex}) {
+            tableRowClassName({row}) {
                 if (row.result === 'Failed') {
                     return 'warning-row';
                 } else if (row.result === 'Uploaded') {
                     return 'success-row';
                 }
                 return '';
+            },
+            onClickSearch() {
+                dialog.showOpenDialog({properties: ['openDirectory']}, (filePaths) => {
+                    this.$store.commit('setVideoPath', {
+                        path: filePaths[0]
+                    })
+                });
             }
-        }
+        },
+        computed: mapGetters({
+            domainList: 'getDomainList',
+            keywordList: 'getKeywordList',
+            titleList: 'getTitleList',
+            videoList: 'getVideoList',
+            videoPath: 'getVideoPath'
+        })
     }
 </script>
 
@@ -129,5 +145,8 @@
     }
     .el-table .success-row {
         background: #f0f9eb;
+    }
+    .el-button {
+        margin-left: 2px;
     }
 </style>
