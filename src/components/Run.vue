@@ -35,10 +35,22 @@
                     </el-form-item>
                     <el-form-item label="스크립트">
                         <el-select v-model="selected.script" placeholder="Script">
+                            <el-option
+                                v-for="item in scriptList"
+                                :key="item"
+                                :label="item"
+                                :value="item">
+                            </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="채널">
                         <el-select v-model="selected.channel" placeholder="Channel">
+                            <el-option
+                                v-for="item in channelList"
+                                :key="item"
+                                :label="item"
+                                :value="item">
+                            </el-option>
                         </el-select>
                     </el-form-item>
                 </el-form>
@@ -106,7 +118,11 @@
                     title: '',
                     script: '',
                     channel: ''
-                }
+                },
+                scriptList: ['스크립트1', '스크립트2', '스크립트3', '스크립트4'],
+                channelList: ['tv', 'videogames', 'school', 'tech', 'news', 'animals',
+                            'lifestyle', 'auto', 'people', 'sport', 'kids', 'travel', 'shortfilms',
+                            'creation', 'webcam', 'music', 'fun']
             }
         },
         methods: {

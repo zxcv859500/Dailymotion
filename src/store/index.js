@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 const fs = require('fs');
+const path = require('path');
 
 Vue.use(Vuex);
 
@@ -58,7 +59,8 @@ const store = new Vuex.Store({
 
             const text = fs.readFileSync(state.domainPath, 'utf-8');
             text.split('\n').forEach((ele) => {
-                domainList.push(ele);
+                if (ele.trim() !== String(''))
+                    domainList.push(ele);
             });
             state.domain = domainList;
         },
@@ -69,7 +71,8 @@ const store = new Vuex.Store({
 
             const text = fs.readFileSync(state.keywordPath, 'utf-8');
             text.split('\n').forEach((ele) => {
-                keywordList.push(ele);
+                if (ele.trim() !== String(''))
+                    keywordList.push(ele);
             });
             state.keyword = keywordList;
         },
@@ -80,7 +83,8 @@ const store = new Vuex.Store({
 
             const text = fs.readFileSync(state.titlePath, 'utf-8');
             text.split('\n').forEach((ele) => {
-                titleList.push(ele);
+                if (ele.trim() !== String( ''))
+                    titleList.push(ele);
             });
             state.title = titleList;
         },
@@ -90,12 +94,16 @@ const store = new Vuex.Store({
             let loginList = [];
 
             const text = fs.readFileSync(state.loginPath, 'utf-8');
-            text.split('\n').forEach((ele) => {
-                const account = ele.split(/[ ]+/);
-                loginList.push({
-                    id: account[0],
-                    password: account[1]
-                })
+            text.split('\n').forEach((ele, index) => {
+                if (ele.trim() !== String('')) {
+                    const account = ele.split(/[ \t]+/);
+                    loginList.push({
+                        id: account[0],
+                        password: account[1],
+                        index: index,
+                        state: 'Ready'
+                    })
+                }
             });
             state.login = loginList;
         },
@@ -105,13 +113,18 @@ const store = new Vuex.Store({
             let videos = [];
 
             fs.readdirSync(state.videoPath).forEach((ele) => {
-                const video = {
-                    title: ele,
-                    result: 'Ready'
-                };
-                videos.push(video);
+                if (!fs.lstatSync(path.join(state.videoPath, ele)).isDirectory()) {
+                    const video = {
+                        title: ele,
+                        result: 'Ready'
+                    };
+                    videos.push(video);
+                }
             });
             state.video = videos;
+        },
+        removeLogin (state, payload) {
+            state.login.splice(payload.index, 1);
         }
     }
 });
